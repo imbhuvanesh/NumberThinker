@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Thinker - Netscape Navigator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Chicago', 'Geneva', 'Helvetica', sans-serif;
+            background: #c0c0c0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(45deg, #c0c0c0 25%, transparent 25%), 
+                            linear-gradient(-45deg, #c0c0c0 25%, transparent 25%), 
+                            linear-gradient(45deg, transparent 75%, #c0c0c0 75%), 
+                            linear-gradient(-45deg, transparent 75%, #c0c0c0 75%);
+            background-size: 2px 2px;
+            background-position: 0 0, 0 1px, 1px -1px, -1px 0px;
+        }
+
+        .browser-window {
+            width: 90%;
+            max-width: 600px;
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .title-bar {
+            background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+            border-bottom: 1px solid #808080;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            position: relative;
+        }
+
+        .title-text {
+            font-size: 11px;
+            font-weight: bold;
+            color: #000;
+            flex: 1;
+            text-align: center;
+        }
+
+        .window-controls {
+            position: absolute;
+            right: 4px;
+            display: flex;
+            gap: 2px;
+        }
+
+        .control-btn {
+            width: 14px;
+            height: 14px;
+            border: 1px outset #c0c0c0;
+            background: #c0c0c0;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .control-btn:active {
+            border: 1px inset #c0c0c0;
+        }
+
+        .menu-bar {
+            background: #c0c0c0;
+            border-bottom: 1px solid #808080;
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+
+        .menu-item {
+            display: inline-block;
+            padding: 2px 8px;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #000080;
+            color: white;
+        }
+
+        .toolbar {
+            background: linear-gradient(to bottom, #e0e0e0, #d0d0d0);
+            border-bottom: 1px solid #808080;
+            padding: 6px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .toolbar-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px outset #c0c0c0;
+            background: #c0c0c0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .toolbar-btn:active {
+            border: 1px inset #c0c0c0;
+        }
+
+        .address-bar {
+            flex: 1;
+            margin-left: 8px;
+            padding: 2px 4px;
+            border: 1px inset #c0c0c0;
+            background: white;
+            font-size: 11px;
+            font-family: monospace;
+        }
+
+        .content-area {
+            background: white;
+            min-height: 400px;
+            padding: 20px;
+            border-top: 1px solid #808080;
+        }
+
+        .page-container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Times', serif;
+            font-size: 24px;
+            color: #000080;
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+
+        .form-container {
+            background: #f0f0f0;
+            border: 2px inset #c0c0c0;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 4px;
+            border: 2px inset #c0c0c0;
+            background: white;
+            font-size: 12px;
+            font-family: monospace;
+            margin-bottom: 15px;
+        }
+
+        input[type="number"]:focus {
+            outline: 1px dotted #000;
+            outline-offset: -1px;
+        }
+
+        .mac-button {
+            background: linear-gradient(to bottom, #f0f0f0, #d0d0d0);
+            border: 2px outset #c0c0c0;
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .mac-button:active {
+            border: 2px inset #c0c0c0;
+            background: linear-gradient(to bottom, #d0d0d0, #f0f0f0);
+        }
+
+        .thinking-container {
+            margin: 20px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f8f8;
+            border: 1px solid #c0c0c0;
+            padding: 15px;
+        }
+
+        .thinking-text {
+            font-size: 12px;
+            font-family: monospace;
+            color: #000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .thinking-text.show {
+            opacity: 1;
+        }
+
+        .dots {
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: #000;
+            margin: 0 1px;
+            opacity: 0;
+            animation: dotBlink 1.5s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dotBlink {
+            0%, 80%, 100% {
+                opacity: 0;
+            }
+            40% {
+                opacity: 1;
+            }
+        }
+
+        .result {
+            background: #ffffff;
+            border: 2px inset #c0c0c0;
+            padding: 15px;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-text {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #000080;
+        }
+
+        .result-number {
+            font-size: 20px;
+            font-family: monospace;
+            font-weight: bold;
+            color: #000;
+            background: #ffff00;
+            padding: 5px 10px;
+            border: 1px solid #000;
+            display: inline-block;
+        }
+
+        .status-bar {
+            background: #c0c0c0;
+            border-top: 1px solid #808080;
+            padding: 2px 8px;
+            font-size: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-item {
+            border: 1px inset #c0c0c0;
+            padding: 1px 4px;
+            background: #f0f0f0;
+        }
+
+        @media (max-width: 650px) {
+            .browser-window {
+                width: 95%;
+                margin: 10px;
+            }
+            
+            .toolbar {
+                flex-wrap: wrap;
+            }
+            
+            .address-bar {
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-window">
+        <div class="title-bar">
+            <div class="title-text">Number Thinker - Netscape Navigator</div>
+            <div class="window-controls">
+                <div class="control-btn">_</div>
+                <div class="control-btn">□</div>
+                <div class="control-btn">×</div>
+            </div>
+        </div>
+        
+        <div class="menu-bar">
+            <span class="menu-item">File</span>
+            <span class="menu-item">Edit</span>
+            <span class="menu-item">View</span>
+            <span class="menu-item">Go</span>
+            <span class="menu-item">Bookmarks</span>
+            <span class="menu-item">Options</span>
+            <span class="menu-item">Directory</span>
+            <span class="menu-item">Window</span>
+            <span class="menu-item">Help</span>
+        </div>
+        
+        <div class="toolbar">
+            <div class="toolbar-btn">◄</div>
+            <div class="toolbar-btn">►</div>
+            <div class="toolbar-btn">↻</div>
+            <div class="toolbar-btn">🏠</div>
+            <div class="toolbar-btn">🔍</div>
+            <input type="text" class="address-bar" value="http://localhost/number-thinker.html" readonly>
+        </div>
+        
+        <div class="content-area">
+            <div class="page-container">
+                <h1>Number Thinker v1.0</h1>
+                
+                <div class="form-container">
+                    <label for="numberInput">Enter the Number You Think:</label>
+                    <input type="number" id="numberInput" placeholder="Type a number...">
+                    <button class="mac-button" onclick="startThinking()">Think!</button>
+                </div>
+                
+                <div class="thinking-container">
+                    <div class="thinking-text" id="thinkingText">
+                        Thinking<span class="dots">
+                            <span class="dot">.</span>
+                            <span class="dot">.</span>
+                            <span class="dot">.</span>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="result" id="result">
+                    <div class="result-text">Number You Thought:</div>
+                    <div class="result-number" id="resultNumber">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-bar">
+            <div>Document: Done</div>
+            <div class="status-item">Ready</div>
+        </div>
+    </div>
+
+    <script>
+        let isThinking = false;
+
+        function startThinking() {
+            if (isThinking) return;
+            
+            const input = document.getElementById('numberInput');
+            const thinkingText = document.getElementById('thinkingText');
+            const result = document.getElementById('result');
+            const resultNumber = document.getElementById('resultNumber');
+            
+            const number = input.value.trim();
+            
+            if (!number) {
+                input.focus();
+                return;
+            }
+            
+            isThinking = true;
+            
+            // Hide result and show thinking
+            result.classList.remove('show');
+            thinkingText.classList.add('show');
+            
+            // Update status
+            document.querySelector('.status-bar div:last-child').textContent = 'Processing...';
+            
+            // Simulate thinking delay (5 seconds)
+            setTimeout(() => {
+                // Hide thinking and show result
+                thinkingText.classList.remove('show');
+                resultNumber.textContent = number;
+                
+                setTimeout(() => {
+                    result.classList.add('show');
+                    document.querySelector('.status-bar div:last-child').textContent = 'Complete';
+                    isThinking = false;
+                }, 300);
+            }, 5000);
+        }
+
+        // Allow Enter key to trigger thinking
+        document.getElementById('numberInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                startThinking();
+            }
+        });
+
+        // Auto-focus input on load
+        window.addEventListener('load', function() {
+            document.getElementById('numberInput').focus();
+        });
+
+        // Add click handlers for window controls (just for show)
+        document.querySelectorAll('.control-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Just visual feedback
+            });
+        });
+
+        // Add click handlers for toolbar buttons (just for show)
+        document.querySelectorAll('.toolbar-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Just visual feedback
+            });
+        });
+    </script>
+</body>
+</html>
